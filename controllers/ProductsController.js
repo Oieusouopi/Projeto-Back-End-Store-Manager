@@ -21,8 +21,8 @@ const getIdProducts = async (req, res, next) => {
 const postProducts = async (req, res, next) => {
  try {
    const { name, quantity } = req.body;
-   const { message, code } = await productsServices.postProducts(name, quantity);
-   return res.status(code).json({ message });
+   const product = await productsServices.postProducts(name, quantity);
+   return res.status(httpCode.CREATED).json(product);
  } catch (error) {
    next(error);
  }

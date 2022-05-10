@@ -32,11 +32,19 @@ const validQuantity = (quantity) => {
   }
 };
 
+const validProductExist = async (name) => {
+ const products = await productsModels.getAllProducts();
+ const productFilter = products.filter((product) => product.name === name);
+ if (productFilter.length > 0) throw validMessageCode(httpCode.CONFLICT, message.PRODUCT_EXIST);
+};
+
 const postProducts = async (name, quantity) => {
   validName(name);
   validQuantity(quantity);
+  await validProductExist(name);
   await productsModels.postProducts(name, quantity);
-  return { code: 200, message: 'successfully added your product' };
+  const [product] = await productsModels.getNameProduct(name);
+  return product;
 };
 
 module.exports = {

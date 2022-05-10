@@ -12,6 +12,7 @@ const message = {
   SALEID_REQUIRED: '"SaleId" is required',
   SALEID_TYPE: '"SaleId" must be a number',
   SALEID_SIZE: '"SaleId" must be greater than or equal to 1',
+  PRODUCT_EXIST: 'Product already exists',
 };
 
 module.exports = message;

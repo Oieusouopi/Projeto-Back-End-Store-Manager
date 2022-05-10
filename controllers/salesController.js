@@ -18,19 +18,18 @@ const getIdSales = async (req, res, next) => {
     }
 };
 
-// const postSales = async (req, res, next) => {
-//  try {
-//      const { product_id, quantity } = req.body;
-//      const arraySale = [product_id, quantity];
-//      const { message, code } = await salesServices.postSales(arraySale);
-//      res.status(code).json({ message });
-//  } catch (error) {
-//      next(error);
-//  }
-// };
+const postSales = async (req, res, next) => {
+ try {
+     const arraySale = req.body;
+     const { message, code } = await salesServices.postSales(arraySale);
+     res.status(code).json({ message });
+ } catch (error) {
+     next(error);
+ }
+};
   
 module.exports = {
   getAllSales,
   getIdSales,
-  // postSales,
+  postSales,
 };

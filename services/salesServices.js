@@ -42,14 +42,14 @@ const validSaleId = (saleId) => {
 
 const postSales = async (arraySale) => {
   arraySale.map((sale) => {
-  const { quantity, product_id } = sale;
+  const { quantity, productId } = sale;
   validQuantity(quantity);
-  validProductId(product_id);
+  validProductId(productId);
   return sale;
 });
   arraySale.map(async (sale) => {
-  const { quantity, product_id } = sale;
-  await salesModels.postSales(product_id, quantity);
+  const { quantity, productId } = sale;
+  await salesModels.postSales(productId, quantity);
 });
   return { code: 200, message: 'successfully added your sale' };
 };
