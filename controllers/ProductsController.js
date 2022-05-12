@@ -28,8 +28,20 @@ const postProducts = async (req, res, next) => {
  }
 };
 
+const putProducts = async (req, res, next) => {
+ try {
+   const { name, quantity } = req.body;
+   const { id } = req.params;
+   const product = await productsServices.putProducts(id, name, quantity);
+   return res.status(httpCode.OK).json(product);
+ } catch (error) {
+   next(error);
+ }
+};
+
 module.exports = {
   getAllProducts,
   getIdProducts,
   postProducts,
+  putProducts,
 };

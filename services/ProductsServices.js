@@ -10,9 +10,13 @@ const getAllProducts = async () => {
   return products;
 };
 
+const validProductNotFound = (product) => {
+ if (!product) throw validMessageCode(httpCode.NOT_FOUND, message.PRODUCT_NOT_FOUND);
+};
+
 const getIdProducts = async (id) => {
   const [product] = await productsModels.getIdProducts(id);
-  if (!product) throw validMessageCode(httpCode.NOT_FOUND, message.PRODUCT_NOT_FOUND);
+  validProductNotFound(product);
   return product;
 };
 
@@ -47,10 +51,21 @@ const postProducts = async (name, quantity) => {
   return product;
 };
 
+const putProducts = async (id, name, quantity) => {
+  validName(name);
+  validQuantity(quantity);
+  const [product] = await productsModels.getIdProducts(id);
+  validProductNotFound(product);
+  await productsModels.putProducts(id, name, quantity);
+  const [newProduct] = await productsModels.getIdProducts(id);
+  return newProduct;
+};
+
 module.exports = {
     getAllProducts,
     getIdProducts,
     validQuantity,
     validName,
     postProducts,
+    putProducts,
 };
