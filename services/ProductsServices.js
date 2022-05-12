@@ -54,11 +54,17 @@ const postProducts = async (name, quantity) => {
 const putProducts = async (id, name, quantity) => {
   validName(name);
   validQuantity(quantity);
-  const [product] = await productsModels.getIdProducts(id);
-  validProductNotFound(product);
+  const [product] = await productsModels.getIdProducts(id); // PODERIA MUDAR ?
+  validProductNotFound(product); // é necessario ?
   await productsModels.putProducts(id, name, quantity);
   const [newProduct] = await productsModels.getIdProducts(id);
-  return newProduct;
+  return newProduct; // outra forma de mostrar o objeto
+};
+
+const deleteProducts = async (id) => {
+  const [product] = await productsModels.getIdProducts(id);
+  validProductNotFound(product);
+  await productsModels.deleteProducts(id);
 };
 
 module.exports = {
@@ -68,4 +74,5 @@ module.exports = {
     validName,
     postProducts,
     putProducts,
+    deleteProducts,
 };
