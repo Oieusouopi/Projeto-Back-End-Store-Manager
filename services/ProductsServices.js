@@ -29,7 +29,10 @@ const validName = (name) => {
 };
 
 const validQuantity = (quantity) => {
-  if (!quantity) throw validMessageCode(httpCode.BAD_REQUEST, message.QUANTITY_REQUIRED);
+  console.log(quantity === 0);
+  if (quantity === undefined) {
+    throw validMessageCode(httpCode.BAD_REQUEST, message.QUANTITY_REQUIRED);
+  }
   if (quantity <= 0) throw validMessageCode(httpCode.UNPROCESSABLE, message.QUANTITY_SIZE);
   if (typeof (quantity) !== 'number') {
     throw validMessageCode(httpCode.BAD_REQUEST, message.QUANTITY_TYPE);
