@@ -1,6 +1,6 @@
 const salesModels = require('../models/salesModels');
 const validMessageCode = require('./validMessageCode');
-const productsModels = require('../models/productsModels');
+// const productsModels = require('../models/productsModels');
 
 // HELPERS
 const httpCode = require('../helpers/httpCode');
@@ -49,20 +49,33 @@ const validSaleId = (saleId) => {
 //   }
 //  };
 
-const postSales = async (arraySale) => {
-  // await validProductNotExist(arraySale[0].productId); // ajuda nisto produto nao existe
-  arraySale.map(async (sale) => {
+const arrayMapvalid = (array) => {
+  array.map((sale) => {
     const { quantity, productId } = sale;
     validQuantity(quantity);
     validProductId(productId);
     return sale;
   });
+};
+
+const postSales = async (arraySale) => {
+  // await validProductNotExist(arraySale[0].productId); // ajuda nisto produto nao existe
+  arrayMapvalid(arraySale);
   const id = await salesModels.createSale();
   arraySale.map(async (sale) => {
   const { quantity, productId } = sale;
   await salesModels.postSales(id, productId, quantity);
 });
   return { id, itemsSold: arraySale };
+};
+
+const putSales = async (saleId, arraySale) => {
+  arrayMapvalid(arraySale);
+  arraySale.map(async (sale) => {
+    const { quantity, productId } = sale;
+    await salesModels.putSales(productId, quantity);
+  });
+  return { saleId, itemUpdated: arraySale };
 };
 
 module.exports = {
@@ -72,4 +85,5 @@ module.exports = {
     validProductId,
     validSaleId,
     postSales,
+    putSales,
 };

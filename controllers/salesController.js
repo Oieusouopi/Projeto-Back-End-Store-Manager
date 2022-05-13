@@ -28,8 +28,20 @@ const postSales = async (req, res, next) => {
  }
 };
 
+const putSales = async (req, res, next) => {
+  try {
+    const arraySale = req.body;
+    const { id } = req.params;
+    const saleUpdate = await salesServices.putSales(id, arraySale);
+    res.status(httpCode.OK).json(saleUpdate);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllSales,
   getIdSales,
   postSales,
+  putSales,
 };
