@@ -29,7 +29,6 @@ const validName = (name) => {
 };
 
 const validQuantity = (quantity) => {
-  console.log(quantity === 0);
   if (quantity === undefined) {
     throw validMessageCode(httpCode.BAD_REQUEST, message.QUANTITY_REQUIRED);
   }
