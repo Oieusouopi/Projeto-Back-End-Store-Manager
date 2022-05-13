@@ -1,5 +1,6 @@
 const salesModels = require('../models/salesModels');
 const validMessageCode = require('./validMessageCode');
+const productsModels = require('../models/productsModels');
 
 // HELPERS
 const httpCode = require('../helpers/httpCode');
@@ -40,18 +41,28 @@ const validSaleId = (saleId) => {
   if (saleId <= 0) throw validMessageCode(httpCode.BAD_REQUEST, message.SALEID_SIZE);
  };
 
+//  const validProductNotExist = async (productId) => {
+//   const products = await productsModels.getAllProducts();
+//   const productsFilter = products.filter((product) => product.id === productId);
+//   if (productsFilter.length === 0) {
+//     throw validMessageCode(httpCode.UNPROCESSABLE, message.PRODUCT_NOT_EXIST);
+//   }
+//  };
+
 const postSales = async (arraySale) => {
-  arraySale.map((sale) => {
-  const { quantity, productId } = sale;
-  validQuantity(quantity);
-  validProductId(productId);
-  return sale;
-});
+  // await validProductNotExist(arraySale[0].productId); // ajuda nisto produto nao existe
+  arraySale.map(async (sale) => {
+    const { quantity, productId } = sale;
+    validQuantity(quantity);
+    validProductId(productId);
+    return sale;
+  });
+  const id = await salesModels.createSale();
   arraySale.map(async (sale) => {
   const { quantity, productId } = sale;
-  await salesModels.postSales(productId, quantity);
+  await salesModels.postSales(id, productId, quantity);
 });
-  return { code: 200, message: 'successfully added your sale' };
+  return { id, itemsSold: arraySale };
 };
 
 module.exports = {

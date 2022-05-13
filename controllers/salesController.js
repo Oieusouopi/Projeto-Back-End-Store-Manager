@@ -21,13 +21,13 @@ const getIdSales = async (req, res, next) => {
 const postSales = async (req, res, next) => {
  try {
      const arraySale = req.body;
-     const { message, code } = await salesServices.postSales(arraySale);
-     res.status(code).json({ message });
+     const sale = await salesServices.postSales(arraySale);
+     res.status(httpCode.CREATED).json(sale);
  } catch (error) {
      next(error);
  }
 };
-  
+
 module.exports = {
   getAllSales,
   getIdSales,
