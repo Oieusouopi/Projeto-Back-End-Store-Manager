@@ -11,9 +11,13 @@ const getAllSales = async () => {
   return sales;
 };
 
+const validSaleNotFound = (sale) => {
+  if (sale.length === 0) throw validMessageCode(httpCode.NOT_FOUND, message.SALE_NOT_FOUND);
+};
+
 const getIdSales = async (id) => {
   const sale = await salesModels.getIdSales(id);
-  if (sale.length === 0) throw validMessageCode(httpCode.NOT_FOUND, message.SALE_NOT_FOUND);
+  validSaleNotFound(sale);
   return sale;
 };
 
@@ -46,8 +50,8 @@ const validSaleId = (saleId) => {
 //   console.log(product);
 //  };
 
-const arrayMapvalid = async (array) => {
-    array.map(async (sale) => {
+const arrayMapvalid = (array) => {
+    array.map((sale) => {
     const { quantity, productId } = sale;
     validQuantity(quantity);
     validProductId(productId);
@@ -75,6 +79,13 @@ const putSales = async (saleId, arraySale) => {
   return { saleId, itemUpdated: arraySale };
 };
 
+const deleteSales = async (id) => {
+  const sale = await salesModels.getIdSales(id);
+  validSaleNotFound(sale);
+  await salesModels.deleteSales(id);
+  return true;
+};
+
 module.exports = {
     getAllSales,
     getIdSales,
@@ -83,4 +94,5 @@ module.exports = {
     validSaleId,
     postSales,
     putSales,
+    deleteSales,
 };

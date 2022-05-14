@@ -39,9 +39,20 @@ const putSales = async (req, res, next) => {
   }
 };
 
+const deleteSales = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await salesServices.deleteSales(id);
+    res.status(httpCode.NO_CONTENT).json(null);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllSales,
   getIdSales,
   postSales,
   putSales,
+  deleteSales,
 };
