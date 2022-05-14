@@ -42,25 +42,22 @@ const validSaleId = (saleId) => {
  };
 
 //  const validProductNotExist = async (productId) => {
-//   const products = await productsModels.getAllProducts();
-//   const productsFilter = products.filter((product) => product.id === productId);
-//   if (productsFilter.length === 0) {
-//     throw validMessageCode(httpCode.UNPROCESSABLE, message.PRODUCT_NOT_EXIST);
-//   }
+//   const [product] = await productsModels.getIdProducts(productId);
+//   console.log(product);
 //  };
 
-const arrayMapvalid = (array) => {
-  array.map((sale) => {
+const arrayMapvalid = async (array) => {
+    array.map(async (sale) => {
     const { quantity, productId } = sale;
     validQuantity(quantity);
     validProductId(productId);
-    return sale;
+    // await validProductNotExist(productId);
+    return sale; 
   });
 };
 
 const postSales = async (arraySale) => {
-  // await validProductNotExist(arraySale[0].productId); // ajuda nisto produto nao existe
-  arrayMapvalid(arraySale);
+  await arrayMapvalid(arraySale);
   const id = await salesModels.createSale();
   arraySale.map(async (sale) => {
   const { quantity, productId } = sale;

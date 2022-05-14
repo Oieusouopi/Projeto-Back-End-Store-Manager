@@ -1,23 +1,40 @@
 const { describe, it } = require('mocha');
 const { expect } = require('chai');
 
+const restoreDb = require('../../restoreDb');
+
 const salesModels = require('../../../models/salesModels');
-const mochObject = 	{
-    DATEMOCH: "2022-05-07T00:25:03.000Z",
-    SUCESSPRODUCTID: 1,
-    QUANTITYMOCH: 5
-};
 
-const INVALIDPRODUCTID = 10;
+// HELPERS
+const { mockSales } = require('../../helpers/mockSales');
 
-describe('teste para a função', () => {
-  it('getAllSales no models é um objeto', async () => {
-    const [sales] = await salesModels.getAllSales();
-    expect(sales).to.be.an('object');
+describe('teste para a função de pegar todas as vendas', () => {
+
+  it('É uma array', async () => {
+    const sales = await salesModels.getAllSales();
+    expect(sales).to.be.an('array');
   });
 
-  it('getIdSales no models é uma array', async () => {
-    const { SUCESSPRODUCTID } = mochObject;
+  it('tem a propriedade id', async () => {
+    const [sales] = await salesModels.getAllSales();
+    expect(sales).to.have.property('productId');
+  });
+
+  it('tem a propriedade name', async () => {
+    const [sales] = await salesModels.getAllSales();
+    expect(sales).to.have.property('date');
+  });
+
+  it('tem a propriedade quantity', async () => {
+    const [sales] = await salesModels.getAllSales();
+    expect(sales).to.have.property('quantity');
+  });
+});
+
+describe('teste para a função de pegar o id de Sales', () => {
+
+  it('É uma array', async () => {
+    const { SUCESSPRODUCTID } = mockSales;
     const salesId = await salesModels.getIdSales(SUCESSPRODUCTID);
     expect(salesId).to.be.an('array');
   });
@@ -31,24 +48,47 @@ describe('teste para a função', () => {
 //     expect(quantity).to.equal(QUANTITYMOCH);
 //   });
 
-  it('getIdSales com id inexistente retorna vazio', async () => {
+  it('Uma id inexistente retorna vazio', async () => {
+    const { INVALIDPRODUCTID } = mockSales;
     const [salesId] = await salesModels.getIdSales(INVALIDPRODUCTID);
     expect(salesId).to.be.an('undefined');
   });
 
-  it('getAllProducts tem a propriedade id', async () => {
-    const [sales] = await salesModels.getAllSales();
-    expect(sales).to.have.property('productId');
+});
+
+describe('teste da função de criar um cliente', () => {
+
+  it('retorna um number', async () => {
+    const saleId = await salesModels.createSale();
+    expect(saleId).to.be.an('number');
+  })
+
+});
+
+describe('teste da função de criar um item vendido', () => {
+
+  beforeEach(async () => {
+    await restoreDb();
+    });
+
+  it('se retorna true', async () => {
+    const { SUCESSSALESID, SUCESSPRODUCTID, QUANTITYMOCK } = mockSales;
+    const returnFunc = await salesModels.postSales(SUCESSSALESID, SUCESSPRODUCTID, QUANTITYMOCK);;
+    expect(returnFunc).to.be.true;
   });
 
-  it('getAllProducts tem a propriedade name', async () => {
-    const [sales] = await salesModels.getAllSales();
-    expect(sales).to.have.property('date');
-  });
+});
 
-  it('getAllProducts tem a propriedade quantity', async () => {
-    const [sales] = await salesModels.getAllSales();
-    expect(sales).to.have.property('quantity');
+describe('teste da função que atualiza um item vendido', () => {
+
+  beforeEach(async () => {
+    await restoreDb();
+    });
+
+  it('se retorna true', async () => {
+    const { SUCESSPRODUCTID, QUANTITYMOCK } = mockSales;
+    const returnFunc = await salesModels.putSales(SUCESSPRODUCTID, QUANTITYMOCK);
+    expect(returnFunc).to.be.true;
   });
 
 });

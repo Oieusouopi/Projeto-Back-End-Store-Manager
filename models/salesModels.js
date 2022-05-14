@@ -30,7 +30,7 @@ const createSale = async () => {
 const postSales = async (salesId, productId, quantity) => {
     const query = `INSERT INTO StoreManager.sales_products (sale_id, product_id, quantity)
     VALUES(?, ?, ?)`;
-    await connection.execute(query, [salesId, productId, quantity]); // porque tem que ser uma promise ? Porque mysql é uma promise?
+    await connection.execute(query, [salesId, productId, quantity]);
     return true;
 };
 
