@@ -76,7 +76,8 @@ const putSales = async (saleId, arraySale) => {
     const { quantity, productId } = sale;
     await salesModels.putSales(productId, quantity);
   });
-  return { saleId, itemUpdated: arraySale };
+  const objectResult = { saleId, itemUpdated: arraySale };
+  return objectResult;
 };
 
 const deleteSales = async (id) => {
