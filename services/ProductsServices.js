@@ -40,15 +40,15 @@ const validQuantity = (quantity) => {
   }
 };
 
-// const validProductExist = async (name) => {
-//  const products = await productsModels.getNameProduct(name);
-//  if (products) throw validMessageCode(httpCode.CONFLICT, message.PRODUCT_EXIST);
-// };
+const validProductExist = async (name) => {
+ const [products] = await productsModels.getNameProduct(name);
+ if (products) throw validMessageCode(httpCode.CONFLICT, message.PRODUCT_EXIST);
+};
 
 const postProducts = async (name, quantity) => {
   validName(name);
   validQuantity(quantity);
-  // await validProductExist(name);
+  await validProductExist(name);
   await productsModels.postProducts(name, quantity);
   const [product] = await productsModels.getNameProduct(name);
   return product;
