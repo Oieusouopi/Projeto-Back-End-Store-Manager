@@ -75,4 +75,31 @@ describe('testando a função de adicionar um produto', () => {
     const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
     expect(product).to.be.an('object');
   });
+
+  it('se tem a propriedade id',async () => {
+    const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
+    const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
+    expect(product).to.have.property('id');
+  })
+  
+  it('se tem a propriedade name',async () => {
+    const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
+    const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
+    expect(product).to.have.property('name');
+  })
+
+  it('se tem a propriedade quantity',async () => {
+    const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
+    const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
+    expect(product).to.have.property('quantity');
+  })
+
+  it.only('se com name existente ela retorna uma mensagem',async () => {
+    const { QUANTITYMOCK } = newProductObject;
+    const { NAMEMOCK } = objectMockModules;
+    const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
+    console.log(product);
+    expect(product).to.deep.equal('Product already exists');
+  })
+
 });
