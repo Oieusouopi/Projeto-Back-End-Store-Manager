@@ -44,11 +44,11 @@ describe('teste para a função de pegar todos produtos na models', () => {
 
 describe('teste para a função de pegar o id do produto com o retorno correto na models', () => {
 
-  beforeEach(async () => {
+  beforeEach(() => {
     sinon.stub(connection, 'execute').resolves(objectEqualOnSQL)
     });
 
-  afterEach(async () => {
+  afterEach(() => {
     connection.execute.restore();
   });
 

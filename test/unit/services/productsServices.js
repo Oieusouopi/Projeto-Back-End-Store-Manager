@@ -7,6 +7,7 @@ const productsServices = require('../../../services/ProductsServices')
 
 // HELPERS
 const { objectMockModules, newProductObject, arrayMockModules, objectEqualOnSQL, newProductObjectByName } = require('../../helpers/mockProducts');
+const restoreDb = require('../../restoreDb');
 
 describe('teste da função de pegar todos produtos na service', () => {
   beforeEach(() => {
@@ -127,7 +128,8 @@ describe('testado a função de pegar um produto por id na service', () => {
 
 describe('testando a função de alterar um produto na service com os componentes certos', () => {
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await restoreDb();
     sinon.stub(productsModels, 'putProducts').resolves(true)
   });
 

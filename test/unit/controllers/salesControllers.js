@@ -5,6 +5,7 @@ const sinon = require('sinon');
 const salesServices = require('../../../services/salesServices');
 const salesController = require('../../../controllers/salesController');
 const { arrayMockSalesModules, validObjectModules } = require('../../helpers/mockSales');
+const restoreDb = require('../../restoreDb');
 
 
 describe('teste para a função de pegar todas as vendas na controller', () => {
@@ -12,7 +13,8 @@ describe('teste para a função de pegar todas as vendas na controller', () => {
     const req = {};
     const res = {};
 
-    beforeEach(() => {
+    beforeEach(async () => {
+        await restoreDb();
         res.status = sinon.stub().returns(res);
         res.json = sinon.stub().returns()
   

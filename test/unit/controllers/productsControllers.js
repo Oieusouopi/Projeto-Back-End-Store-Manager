@@ -6,6 +6,7 @@ const productsService = require('../../../services/ProductsServices');
 const productsController = require('../../../controllers/ProductsController');
 
 const { arrayMockModules, objectEqualOnSQL, newProductObjectByName } = require('../../helpers/mockProducts');
+const restoreDb = require('../../restoreDb');
 
 describe('teste da função de pegar todos produtos na controller', () => {
     const req = {};
@@ -41,7 +42,8 @@ describe('teste da função de pegar um produto pelo id na controller', () => {
     const res = {};
     const next = () => {};
 
-    beforeEach(() => {
+    beforeEach(async () => {
+      await restoreDb()
       res.status = sinon.stub().returns(res);
       res.json = sinon.stub().returns();
       req.params = { id: 1 };
