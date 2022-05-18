@@ -68,6 +68,7 @@ const deleteProducts = async (id) => {
   const [product] = await productsModels.getIdProducts(id);
   validProductNotFound(product);
   await productsModels.deleteProducts(id);
+  return true;
 };
 
 module.exports = {

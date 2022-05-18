@@ -2,17 +2,19 @@ const { describe, it } = require('mocha');
 const { expect } = require('chai');
 const sinon = require('sinon');
 
-// const productsModels = require('../../../models/productsModels');
+const productsModels = require('../../../models/productsModels');
 const productsServices = require('../../../services/ProductsServices')
 
 // HELPERS
-const { objectMockModules, newProductObject } = require('../../helpers/mockProducts');
-const restoreDb = require('../../restoreDb');
+const { objectMockModules, newProductObject, arrayMockModules, objectEqualOnSQL, newProductObjectByName } = require('../../helpers/mockProducts');
 
-describe('teste da função de pegar todos produtos', () => {
-  beforeEach(async () => {
-  await restoreDb();
-//   sinon.stub(productsServices, 'getAllProducts').resolves()
+describe('teste da função de pegar todos produtos na service', () => {
+  beforeEach(() => {
+    sinon.stub(productsModels, 'getAllProducts').resolves(arrayMockModules);
+  });
+
+  afterEach(() => {
+    productsModels.getAllProducts.restore();
   });
 
   it('se retorna uma array', async () => {
@@ -36,70 +38,143 @@ describe('teste da função de pegar todos produtos', () => {
   });
 });
 
-describe('testado a função de pegar um produto por id', () => {
+describe('testado a função de pegar um produto por id na service', () => {
 
-  it('se o retorno é um objeto', async () => {
-    const { SUCESSPRODUCTID } = objectMockModules;
+  beforeEach(() => {
+    sinon.stub(productsServices, 'getIdProducts').resolves(objectEqualOnSQL);
+  });
+
+  afterEach(() => {
+    productsServices.getIdProducts.restore();
+  });
+
+  it('se o retorno é uma array', async () => {
+    const { SUCESSPRODUCTID } = objectMockModules[0];
     const productId = await productsServices.getIdProducts(SUCESSPRODUCTID);
-    expect(productId).to.be.an('object');
+    expect(productId).to.be.an('array');
   })
 
   it('se tem a propriedade id', async () => {
-    const { SUCESSPRODUCTID } = objectMockModules;
-    const productId = await productsServices.getIdProducts(SUCESSPRODUCTID);
+    const { SUCESSPRODUCTID } = objectMockModules[0];
+    const [productId] = await productsServices.getIdProducts(SUCESSPRODUCTID);
     expect(productId).to.have.property('id');
   })
 
   it('se tem a propriedade name', async () => {
-    const { SUCESSPRODUCTID } = objectMockModules;
-    const productId = await productsServices.getIdProducts(SUCESSPRODUCTID);
+    const { SUCESSPRODUCTID } = objectMockModules[0];
+    const [productId] = await productsServices.getIdProducts(SUCESSPRODUCTID);
     expect(productId).to.have.property('name');
   })
 
   it('se tem a propriedade quantity', async () => {
-    const { SUCESSPRODUCTID } = objectMockModules;
-    const productId = await productsServices.getIdProducts(SUCESSPRODUCTID);
+    const { SUCESSPRODUCTID } = objectMockModules[0];
+    const [productId] = await productsServices.getIdProducts(SUCESSPRODUCTID);
     expect(productId).to.have.property('quantity');
   })
 
 });
 
-describe('testando a função de adicionar um produto', () => {
+// describe.only('testando a função de adicionar um produto na service', () => {
 
-  beforeEach(async () => {
-    await restoreDb();
-  })
+//   beforeEach(async () => {
+//     // const objectMock = {
+//     //   id: 4,
+//     //   name: "Martelo",
+//     //   quantity: 5
+//     // };
+//     sinon.stub(productsModels, 'postProducts').resolves(true)
+//     // sinon.stub(productsModels, 'getNameProduct').resolves(newProductObjectByName);
+//   });
 
-  it('quando tem os paramêtros corretos retorna um objeto', async () => {
-    const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
-    const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
-    expect(product).to.be.an('object');
+//   afterEach(async () => {
+//     productsModels.postProducts.restore();
+//     // productsModels.getNameProduct.restore();
+//   });
+
+//   it('quando tem os paramêtros corretos retorna um objeto', async () => {
+//     const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
+//     await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
+//     const product = await productsModels.getNameProduct(NAMEMOCK);
+//     expect(product).to.be.an('object');
+//   });
+
+//   it('se tem a propriedade id',async () => {
+//     const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
+//     const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
+//     expect(product).to.have.property('id');
+//   })
+  
+//   it('se tem a propriedade name',async () => {
+//     const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
+//     const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
+//     expect(product).to.have.property('name');
+//   })
+
+//   it('se tem a propriedade quantity',async () => {
+//     const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
+//     const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
+//     expect(product).to.have.property('quantity');
+//   })
+
+//   it('se com name existente ela retorna uma mensagem',async () => {
+//     const { QUANTITYMOCK } = newProductObject;
+//     const { NAMEMOCK } = objectMockModules[0];
+//     const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
+//     expect(product).to.be.equal('Product already exists');
+//   })
+
+// });
+
+describe('testando a função de alterar um produto na service com os componentes certos', () => {
+
+  beforeEach(() => {
+    sinon.stub(productsModels, 'putProducts').resolves(true)
+  });
+
+  afterEach(() => {
+    productsModels.putProducts.restore();
+  });
+
+  it('se o retorno é um objeto', async () => {
+    const { id, name, quantity } = objectEqualOnSQL[0];
+    const products = await productsServices.putProducts(id, name, quantity);
+    expect(products).to.be.an('object');
   });
 
   it('se tem a propriedade id',async () => {
-    const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
-    const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
-    expect(product).to.have.property('id');
+    const { id, name, quantity } = objectEqualOnSQL[0];
+    const products = await productsServices.putProducts(id, name, quantity);
+    expect(products).to.have.property('id');
   })
-  
+
   it('se tem a propriedade name',async () => {
-    const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
-    const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
-    expect(product).to.have.property('name');
+    const { id, name, quantity } = objectEqualOnSQL[0];
+    const products = await productsServices.putProducts(id, name, quantity);
+    expect(products).to.have.property('name');
   })
 
   it('se tem a propriedade quantity',async () => {
-    const { NAMEMOCK, QUANTITYMOCK } = newProductObject;
-    const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
-    expect(product).to.have.property('quantity');
+    const { id, name, quantity } = objectEqualOnSQL[0];
+    const products = await productsServices.putProducts(id, name, quantity);
+    expect(products).to.have.property('quantity');
   })
 
-  it.only('se com name existente ela retorna uma mensagem',async () => {
-    const { QUANTITYMOCK } = newProductObject;
-    const { NAMEMOCK } = objectMockModules;
-    const product = await productsServices.postProducts(NAMEMOCK, QUANTITYMOCK);
-    console.log(product);
-    expect(product).to.deep.equal('Product already exists');
-  })
+});
+
+describe('testando a função de deletar na service', () => {
+
+  beforeEach(() => {
+    sinon.stub(productsModels, 'deleteProducts').resolves(true);
+  });
+
+  afterEach(() => {
+    productsModels.deleteProducts.restore();
+  });
+
+  it('deletando o produto o retorno é true',async () => {
+    const { id } = objectEqualOnSQL[0];
+    const deleteProduct = await productsServices.deleteProducts(id);
+    expect(deleteProduct).to.be.true;
+  });
 
 });
